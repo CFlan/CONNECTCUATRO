@@ -27,7 +27,7 @@ class Connect4UI extends JFrame implements ActionListener
         public static final int MAXROW = 6;     
         public static final int MAXCOL = 7;     
         public static final String SPACE = "                  "; 
- 
+        AIplayer AIplayer;
         int activeColour = RED;
        
         public Connect4UI() 
@@ -124,9 +124,9 @@ class Connect4UI extends JFrame implements ActionListener
                 gameStatus(g);
         }
  
-        public void place(int n) 
+        public boolean place(int n) 
        {
-                if (gameover) return;
+                if (gameover) return false;
                 first=true;
                 int row;
                 n--;
@@ -140,7 +140,30 @@ class Connect4UI extends JFrame implements ActionListener
                         else
                                 activeColour=RED;
                         repaint();
+                        AIplace(AIplayer.makeMove());
+                        return true;
                 }
+                return false;
+        }
+        public boolean AIplace(int n) 
+       {
+                if (gameover) return false;
+                first=true;
+                int row;
+                n--;
+                for (row=0; row<MAXROW; row++)
+                        if (boardArray[row][n]>0) break;
+                if (row>0) 
+               {
+                        boardArray[--row][n]=activeColour;
+                        if (activeColour==RED)
+                                activeColour=BLUE;
+                        else
+                                activeColour=RED;
+                        repaint();
+                        return true;
+                }
+                return false;
         }
  
         public void displayWinner(Graphics g, int n) 
@@ -236,10 +259,12 @@ class Connect4UI extends JFrame implements ActionListener
                else if (e.getSource() == redPlayer) 
                {
                         if (!first) activeColour=RED;
+                        AIplayer = new AIplayer(BLUE);
                 } 
                 else if (e.getSource() == bluePlayer) 
                 {
                         if (!first) activeColour=BLUE;
+                        AIplayer = new AIplayer(RED);
                 }
         }
  
