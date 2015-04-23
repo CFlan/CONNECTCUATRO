@@ -18,9 +18,10 @@ public class AIplayer
 	
 	public int makeMove ()
 	{
-		int position;
 		//all the random player should care about is picking a column to drop in.
 		column = chooser.nextInt(7);
+		column++;
+		System.out.println("I choose column " + column);
 		//Make sure that column isn't filled, if it is, choose again. If there is still space there, make the move
 		return column;
 	}
