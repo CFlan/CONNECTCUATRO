@@ -225,14 +225,12 @@ class Connect4UI extends JFrame implements ActionListener
                 	score = score+20;
                         JOptionPane.showMessageDialog(this, "You win. Current record is: You:" + wins + "- Computer:" + (round-wins) + ". Your current score is: " + score + ".");
                         //score calculation code
-                        score = 0;
                 }
                 else if(gameover)
                 {
                 	score = score-20;
                         JOptionPane.showMessageDialog(this, "Computer wins. Current record is: You:" + wins + "- Computer:" + (round-wins) + ". Your current score is: " + score + ".");
                         //score calculation code
-                        score = 0;
                 }
                 sim = true;
                 column7.doClick();
@@ -317,6 +315,7 @@ class Connect4UI extends JFrame implements ActionListener
                         gameover=false;
                         setup();
                         repaint();
+                        score = 0;
                		return;
                	}
                	round++;
