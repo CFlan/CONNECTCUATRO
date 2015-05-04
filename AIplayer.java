@@ -30,7 +30,7 @@ public class AIplayer
 	public int makeRandomMove(String bMoves)
 	{
 		//all the random player should care about is picking a column to drop in.
-		int m = genMove();
+		int m = genRandomMove();
 		System.out.println(m+"");
 		boolean gen = true;
 		while(gen)
@@ -41,13 +41,13 @@ public class AIplayer
 			}
 			else
 			{
-				m = genMove();
+				m = genRandomMove();
 				System.out.println(m+"");
 			}
 		}
 		return m;
 	}
-	public int genMove()
+	public int genRandomMove()
 	{
 		return chooser.nextInt(7)+1;
 	}
@@ -58,5 +58,17 @@ public class AIplayer
 	public String getPlayerType()
 	{
 		return playerType;
+	}
+	/*
+	The Connect 4 game will push the score in a setter to AI player which will then change playerType based on that.
+	
+	*/
+	public void setPlayerType(int score)
+	{
+			if(score < 20)
+				playerType = "RANDOM";
+			
+			
+			return;
 	}
 }
