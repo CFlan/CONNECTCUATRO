@@ -10,12 +10,24 @@ public class AIplayer
 	
 	Random chooser = new Random();
 	int Color;
+	int answer;
+	String playerType;
 	public AIplayer(int playerColor)
 	{
 		Color = playerColor;
+		playerType = "RANDOM";
 	}
+	/*
+	makeMove is going to make a decision about which method to call based on the string playerType.
 	
+	
+	*/
 	public int makeMove (String aMoves)
+	{
+		answer = makeRandomMove(aMoves);
+		return answer;
+	}
+	public int makeRandomMove(String bMoves)
 	{
 		//all the random player should care about is picking a column to drop in.
 		int m = genMove();
@@ -23,7 +35,7 @@ public class AIplayer
 		boolean gen = true;
 		while(gen)
 		{
-			if(aMoves.contains(m+""))
+			if(bMoves.contains(m+""))
 			{
 				gen = false;
 			}
@@ -42,5 +54,9 @@ public class AIplayer
 	public int getRandomPlayerColor()
 	{
 		return Color;
+	}
+	public String getPlayerType()
+	{
+		return playerType;
 	}
 }
