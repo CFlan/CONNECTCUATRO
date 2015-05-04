@@ -195,6 +195,7 @@ class Connect4UI extends JFrame implements ActionListener
                 }
                 return false;
         }
+        
         public String availMoves()
         {
         	String aMoves = "";
@@ -206,24 +207,38 @@ class Connect4UI extends JFrame implements ActionListener
         	System.out.println(aMoves);
         	return aMoves;
         }
+        
+        public void updateScore(int n)
+        {
+        	int cScore = 0;
+        	
+        	score = score + cScore;
+
+        }
+        
         public void displayWinner(int n) 
        {
                 gameover=true;
                 if (n==RED && gameover)
                 {
                 	wins++;
-                        JOptionPane.showMessageDialog(this, "You win. Current Score is: " + wins + "-" + (round-wins));
+                	score = score+20;
+                        JOptionPane.showMessageDialog(this, "You win. Current record is: You:" + wins + "- Computer:" + (round-wins) + ". Your current score is: " + score + ".");
                         //score calculation code
+                        score = 0;
                 }
                 else if(gameover)
                 {
-                        JOptionPane.showMessageDialog(this, "Computer wins. Current Score is: " + wins + "-" + (round-wins));
+                	score = score-20;
+                        JOptionPane.showMessageDialog(this, "Computer wins. Current record is: You:" + wins + "- Computer:" + (round-wins) + ". Your current score is: " + score + ".");
                         //score calculation code
+                        score = 0;
                 }
                 sim = true;
                 column7.doClick();
                 gameover=false;
         }
+        
         public boolean gameStatus()
         {
         	if(gameover)
@@ -291,10 +306,14 @@ class Connect4UI extends JFrame implements ActionListener
         {
                	if(round==7)
                	{
-               		System.out.println("7 Rounds Finished");
+               		if(wins>3)
+               			JOptionPane.showMessageDialog(this, "You win with a record of: You:" + wins + "- Computer:" + (round-wins) + ". Your score was: " + score + ".");
+               		else
+               			JOptionPane.showMessageDialog(this, "You lose with a record of: You:" + wins + "- Computer:" + (round-wins) + ". Your score was: " + score + ".");
                		//Score calculation and display based on score here
                		round = 1;
                	        wins = 0;
+               	        sim = false;
                         gameover=false;
                         setup();
                         repaint();
