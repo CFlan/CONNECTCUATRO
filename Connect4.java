@@ -10,6 +10,7 @@ public class Connect4 {
                 frame.setVisible(true);
         }
 }
+
  
 class Connect4UI extends JFrame implements ActionListener 
 {
