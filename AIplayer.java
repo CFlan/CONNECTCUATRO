@@ -1,20 +1,17 @@
 /*
 Connor Flanagan, Cristopher Spanos, Surya Teja Chinta, Kari Gilbertson
-This is the code for the adaptive AI for connect 4.
-At the end of every game we set the player type and then run a method based on a specific kind of AI.
+This is the code for the random AI for connect 4
 */
 
 import java.util.Random;
 
 public class AIplayer
 { 
-	//Color tracks which player the AI is. playerType tracks what kind of moves the AI should be making. Answer returns the column of the move to be made regardless of the AI type.
+	
 	Random chooser = new Random();
 	int Color;
 	int answer;
 	String playerType;
-	
-	
 	public AIplayer(int playerColor)
 	{
 		Color = playerColor;
@@ -28,14 +25,9 @@ public class AIplayer
 	public int makeMove (String aMoves)
 	{
 		answer = makeRandomMove(aMoves);
+		answer = makeMiniMaxMove(aMoves);
 		return answer;
 	}
-	
-	/*
-	makeRandomMove just chooses a random column on the board using genRandomMove and returns it to the game
-	
-	
-	*/
 	public int makeRandomMove(String bMoves)
 	{
 		//all the random player should care about is picking a column to drop in.
@@ -56,25 +48,39 @@ public class AIplayer
 		}
 		return m;
 	}
-	
-	/*
-	genRandomMove just uses Random to generate a column for makeRandomMove to use.
-	*/
 	public int genRandomMove()
 	{
 		return chooser.nextInt(7)+1;
 	}
-	/*
-	getPlayerColor just returns the Color, or player number, of the AI.
-	*/
-	public int getPlayerColor()
+	public int makeMiniMaxMove(String cMoves)
+	{
+
+	}
+	public int genMiniMaxMove()
+	{
+
+	}
+	public int makeAggressiveMove(String dMoves)
+	{
+
+	}
+	public int genAggressiveMove()
+	{
+
+	}
+	public int makeDefensiveMove(String eMoves)
+	{
+
+	}
+	public int genDefensiveMove()
+	{
+
+	}
+
+	public int getRandomPlayerColor()
 	{
 		return Color;
 	}
-	/*
-	getPlayerType is just a getter for the Player type
-	
-	*/
 	public String getPlayerType()
 	{
 		return playerType;
@@ -89,6 +95,6 @@ public class AIplayer
 				playerType = "RANDOM";
 			
 			
-			return;
+			return playerType;
 	}
 }
