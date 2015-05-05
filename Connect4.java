@@ -11,7 +11,45 @@ public class Connect4 {
         }
 }
 
- 
+class Connect4Menu extends JFrame
+{
+    public Connect4Menu()
+    {
+        EventQueue.invokeLater(new Runnable()
+        {
+            public void run() {
+                try
+                {
+                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                }
+                catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex)
+                {
+                    System.out.println("Exception");
+                }
+
+                JPanel panel = new JPanel();
+                panel.add(new JLabel("Choose player 1:"));
+                DefaultComboBoxModel model = new DefaultComboBoxModel();
+                model.addElement("Human Player");
+                model.addElement("Random Player");
+                model.addElement("Minimax Player");
+                model.addElement("AI Player");
+                JComboBox comboBox = new JComboBox(model);
+                panel.add(comboBox);
+                panel.add(new JLabel("Choose player2:"));
+                DefaultComboBoxModel model2 = new DefaultComboBoxModel();
+                model2.addElement("Human Player");
+                model2.addElement("Random Player");
+                model2.addElement("Minimax Player");
+                model2.addElement("AI Player");
+                JComboBox comboBox2 = new JComboBox(model2);
+                panel.add(comboBox2);
+
+                int result = JOptionPane.showConfirmDialog(null, panel, "Players", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);                
+            }
+        });
+    }
+}
 class Connect4UI extends JFrame implements ActionListener 
 {
         private JButton column1, column2, column3, column4, column5, column6, column7;
