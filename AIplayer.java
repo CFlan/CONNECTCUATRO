@@ -500,7 +500,7 @@ public class AIplayer
 	}
 	public int genMiniMaxMove(int[][] board)
 	{
-
+	
 	}
 
 	public int getPlayerColor()
@@ -525,11 +525,11 @@ public class AIplayer
 	The Connect 4 game will push the score in a setter to AI player which will then change playerType based on that.
 	
 	*/
-	// public void setPlayerType(int score)
-	// {
-	// 		if(score < 20)
-	// 			playerType = "RANDOM";
+	 public void setPlayerType(int score)
+	 {
+	 		if(score < 20)
+	 			playerType = "RANDOM";
 			
-	// 		return playerType;
-	// }
+	 		return;
+	 }
 }
