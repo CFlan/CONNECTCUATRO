@@ -500,7 +500,7 @@ public class AIplayer
 	}
 	public int genMiniMaxMove(int[][] board)
 	{
-	
+		return 0;
 	}
 
 	public int getPlayerColor()
