@@ -36,7 +36,7 @@ class Connect4Menu extends JFrame
                 panel.add(comboBox);
                 panel.add(new JLabel("Choose player2:"));
                 DefaultComboBoxModel model2 = new DefaultComboBoxModel();
-                model2.addElement("Dume Player");
+                model2.addElement("Dumb Player");
                 model2.addElement("Aggressive Player");
                 model2.addElement("Defensive Player");
                 model2.addElement("Minimax Player");
