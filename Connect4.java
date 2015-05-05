@@ -5,12 +5,12 @@ import java.awt.event.*;
 public class Connect4 {
         public static void main(String[] args) 
        {
-       		Connect4Menu menu = new Connect4Menu();
                 Connect4UI frame = new Connect4UI();
                 frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE);
                 frame.setVisible(true);
         }
 }
+
 
 class Connect4Menu extends JFrame
 {
@@ -61,7 +61,7 @@ class Connect4UI extends JFrame implements ActionListener
         boolean			sim = false;
         int		round=1;
         int		wins = 0;
-        int		score = 50;
+        int		score = 10;
 
         public static final int BLANK = 0;
         public static final int RED = 1;
@@ -151,7 +151,7 @@ class Connect4UI extends JFrame implements ActionListener
                 first=true;
                	gameover=false;
                 activeColour = RED;
-        	System.out.println("Next game starting. Round:" + (round) + " " + gameover + " " + activeColour);
+        	System.out.println("Next game starting. Round:" + (round));
                 AIplayer = new AIplayer(BLUE);
         }
  
@@ -175,7 +175,7 @@ class Connect4UI extends JFrame implements ActionListener
        	        	return false;
        	        if(activeColour==BLUE)
        	        {
-       	        	AIplace(AIplayer.makeMove(availMoves(), boardArray));
+       	        	AIplace(AIplayer.makeMove(availMoves()));
        	        	return false;
        	        }
        	        System.out.println("You choose column " + n);
@@ -196,6 +196,7 @@ class Connect4UI extends JFrame implements ActionListener
                         gameover = gameStatus();
                         if(!gameover)
                         {
+                        	//updateScore(n);
                         	AIplace(AIplayer.makeMove(availMoves(), boardArray));
                         }
                         else
@@ -243,33 +244,105 @@ class Connect4UI extends JFrame implements ActionListener
         		if(boardArray[0][i]==0)
         			aMoves = aMoves+(i+1);
         	}
-        	System.out.println(aMoves);
         	return aMoves;
         }
         
         public void updateScore(int n)
         {
         	int cScore = 0;
-        	
+        	for (int row=0; row<MAXROW; row++) 
+               {
+                        for (int col=0; col<MAXCOL-2; col++) 
+                       {
+                                int slot =  boardArray[row][col];
+                                if (slot>0
+                                 && (slot == boardArray[row][col+1])
+                                 && (slot == boardArray[row][col+2])) {
+                                	if(slot == 1)
+                                		cScore = cScore +4;
+                                	else
+                                		cScore = cScore - 8;
+                                	break;
+                                }
+                        }
+                }
+                for (int col=0; col<MAXCOL; col++) 
+               {
+                        for (int row=0; row<MAXROW-2; row++) 
+                       {
+                                int slot =  boardArray[row][col];
+                                if (slot>0
+                                 && (slot == boardArray[row+1][col])
+                                 && (slot == boardArray[row+2][col])){
+                                	if(slot == 1)
+                                		cScore = cScore + 4;
+                                	else
+                                		cScore = cScore - 8;
+                                	break;
+                                 }
+                        }
+                }
+                for (int row=0; row<MAXROW-2; row++) 
+                {
+                        for (int col=0; col<MAXCOL-2; col++) 
+                       {
+                                int slot =  boardArray[row][col];
+                                if (slot>0
+                                 && (slot == boardArray[row+1][col+1])
+                                 && (slot == boardArray[row+2][col+2])){
+                               		if(slot == 1)
+                                		cScore = cScore + 4;
+                                	else
+                                		cScore = cScore - 8;
+                                	break;
+                                 }
+                        }
+                }
+                for (int row=MAXROW-1; row>=2; row--) 
+               {
+                        for (int col=0; col<MAXCOL-2; col++) 
+                       {
+                                int slot =  boardArray[row][col];
+                                if (slot>0
+                                 && (slot == boardArray[row-1][col+1])
+                                 && (slot == boardArray[row-2][col+2])){
+                               		if(slot == 1)
+                                		cScore = cScore + 4;
+                                	else
+                                		cScore = cScore - 8;
+                                	break;
+                                 }
+                        }
+                }
+                System.out.println("cScore: " + cScore);
         	score = score + cScore;
 
         }
         
         public void displayWinner(int n) 
        {
+       	        updateScore(0);
                 gameover=true;
                 if (n==RED && gameover)
-                {
+                {	
+                	System.out.println("Score: " + score);
                 	wins++;
                 	score = score+20;
-                        JOptionPane.showMessageDialog(this, "You win. Current record is: You:" + wins + "- Computer:" + (round-wins) + ". Your current score is: " + score + ".");
-                        //score calculation code
+                	if(score > 100)
+                		score = 100;
+                	else if(score < 0)
+                		score = 0;
+                		JOptionPane.showMessageDialog(this, "You win. Current record is: You:" + wins + "- Computer:" + (round-wins) + ". Your current score is: " + score + ".");
                 }
                 else if(gameover)
                 {
+                	System.out.println("Score: " + score);
                 	score = score-20;
-                        JOptionPane.showMessageDialog(this, "Computer wins. Current record is: You:" + wins + "- Computer:" + (round-wins) + ". Your current score is: " + score + ".");
-                        //score calculation code
+                	if(score > 100)
+                		score = 100;
+                	else if(score < 0)
+                		score = 0;
+                		JOptionPane.showMessageDialog(this, "Computer wins. Current record is: You:" + wins + "- Computer:" + (round-wins) + ". Your current score is: " + score + ".");
                 }
                 sim = true;
                 column7.doClick();
@@ -341,12 +414,36 @@ class Connect4UI extends JFrame implements ActionListener
         
         public void nextGame()
         {
+        	String rank = "";
                	if(round==7)
                	{
-               		if(wins>3)
-               			JOptionPane.showMessageDialog(this, "You win with a record of: You:" + wins + "- Computer:" + (round-wins) + ". Your score was: " + score + ".");
+               		if(score >99)
+               			rank = "Connect Cuatro Superstar";
+               		else if(score > 89)
+               			rank = "All-Pro";
+               		else if(score > 79)
+               			rank = "By the Time I Get To Bucharest";
+               		else if(score > 69)
+               			rank = "Wumpus Hunta";
+               		else if(score >59)
+               			rank = "Good Enough That These Aren’t Insults Any More";
+               		else if(score>49)
+               			rank = "The Line Between Competence and Anarchy";
+               		else if(score>39)
+               			rank = "Almost Competent at a Game for Children";
+               		else if(score>29)
+               			rank = "Go Back to Konane";
+               		else if(score>19)
+               			rank = "I Usually Play Canadien Rules Connect 4";
+               		else if(score>9)
+               			rank = "Wait, Get Four in a Row?!?";
                		else
-               			JOptionPane.showMessageDialog(this, "You lose with a record of: You:" + wins + "- Computer:" + (round-wins) + ". Your score was: " + score + ".");
+               			rank = "Ayn Random";
+               		
+               		if(wins>3)
+               			JOptionPane.showMessageDialog(this, "You win with a record of: You:" + wins + "- Computer:" + (round-wins) + ". \nYour rank was: " + rank + ".");
+               		else
+               			JOptionPane.showMessageDialog(this, "You lose with a record of: You:" + wins + "- Computer:" + (round-wins) + ". \nYour rank was: " + rank + ".");
                		//Score calculation and display based on score here
                		round = 1;
                	        wins = 0;
@@ -354,7 +451,7 @@ class Connect4UI extends JFrame implements ActionListener
                         gameover=false;
                         setup();
                         repaint();
-                        score = 0;
+                        score = 10;
                		return;
                	}
                	round++;
