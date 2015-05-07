@@ -27,14 +27,23 @@ public class AIplayer
 	*/
 	public int makeMove (String aMoves, int[][] board)
 	{
+		boolean gen = true;
+		answer = -1;
+		while(gen)
+		{
+			if(aMoves.contains(answer+""))
+				return answer;
+			else{
 		if(playerType == "Random")
 			answer = makeRandomMove(aMoves);
 		if(playerType == "Defensive")
 		  	answer = makeDefensiveMove(aMoves, board);
 		if(playerType == "Aggressive")
 		 	answer = makeAggressiveMove(aMoves, board);
+			}
 		//  if(playerType == "MINIMAX")
 		//  	answer = makeMiniMaxMove(aMoves, board);
+		}
 		return answer;
 	}
 	public int makeRandomMove(String bMoves)
