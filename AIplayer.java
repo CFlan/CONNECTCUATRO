@@ -29,11 +29,14 @@ public class AIplayer
 	{
 		boolean gen = true;
 		answer = -1;
+		int counter = 0;
 		while(gen)
 		{
 			if(aMoves.contains(answer+""))
 				return answer;
 			else{
+				if(counter>10)
+					return makeRandomMove(aMoves);
 		if(playerType == "Random")
 			answer = makeRandomMove(aMoves);
 		if(playerType == "Defensive")
@@ -42,6 +45,7 @@ public class AIplayer
 		 	answer = makeAggressiveMove(aMoves, board, answer);
 			}
 			System.out.println("answer:"+answer+" aMoves:"+aMoves);
+			counter++;
 		//  if(playerType == "MINIMAX")
 		//  	answer = makeMiniMaxMove(aMoves, board);
 		}
