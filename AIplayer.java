@@ -121,7 +121,6 @@ public class AIplayer
 			return;
 	}
 
-	// http://stackoverflow.com/questions/21146940/connect-4-java-win-conditions-check
 	public int heuristic(int[][] board, int token) {
 		int h = 0;
 
