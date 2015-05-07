@@ -22,6 +22,8 @@ public class AIplayer
 	}
 	/*
 	makeMove is going to make a decision about which method to call based on the string playerType.
+
+
 	*/
 	public int makeMove (String aMoves, int[][] board)
 	{
@@ -31,8 +33,8 @@ public class AIplayer
 		  	answer = makeDefensiveMove(aMoves, board);
 		if(playerType == "Aggressive")
 		 	answer = makeAggressiveMove(aMoves, board);
-		//if(playerType == "Minimax Player")
-		  	//answer = makeMiniMaxMove(aMoves, board);
+		//  if(playerType == "MINIMAX")
+		//  	answer = makeMiniMaxMove(aMoves, board);
 		return answer;
 	}
 	public int makeRandomMove(String bMoves)
@@ -78,8 +80,10 @@ public class AIplayer
 		// Find the move minimizing token 1's chances at winning
 		int max = Integer.MIN_VALUE;
 		int bestMove = 0;
-		for(int i=0;i<heuristics.length;i++) {
-			if(heuristics[i] > max) {
+		for(int i=0;i<heuristics.length;i++)
+		{
+			if(heuristics[i] > max)
+			{
 				max = heuristics[i];
 				bestMove = i;
 			}
@@ -104,8 +108,10 @@ public class AIplayer
 		// Find the move maximizing token 1's chances at winning
 		int min = Integer.MAX_VALUE;
 		int bestMove = 0;
-		for(int i=0;i<heuristics.length;i++) {
-			if(heuristics[i] < min) {
+		for(int i=0;i<heuristics.length;i++)
+		{
+			if(heuristics[i] < min)
+			{
 				min = heuristics[i];
 				bestMove = i;
 			}
@@ -113,7 +119,10 @@ public class AIplayer
 
 		return bestMove + 1;
 	}
-
+	// public int makeMiniMaxMove(String eMoves, int[][] board)
+	// {
+	// 	
+	// }
 	public int heuristic(int[][] board, int token)
 	{
 		int h = 0;
@@ -231,39 +240,26 @@ public class AIplayer
 		return result;
 	}
 
-	private int min(int r, int c)
-    {
-        if(r < c)
-            return r;
-        else return c;
-    }
-    private int max(int r, int c)
-    {
-    	if(r > c)
-    		return r;
-    	else return c;
-    }
+	// private int minValue()
+ //    {
 
+ //    }
+ //    private int maxValue()
+ //    {
+
+ //    }
 	public int getPlayerColor()
 	{
 		return Color;
 	}
-	public int getOppositePlayerColor()
-	{
-		int player = 0;
-		if(Color == 1)
-			player = 2;
-		if(Color == 2)
-			player = 1;
-		return player;
-	}
-
+	
 	public String getPlayerType()
 	{
 		return playerType;
 	}
 	/*
 	The Connect 4 game will push the score in a setter to AI player which will then change playerType based on that.
+
 	*/
 	public void setPlayerType(int score)
 	{
