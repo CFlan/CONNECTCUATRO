@@ -6,8 +6,8 @@ This is the code for the random AI for connect 4
 import java.util.Random;
 
 public class AIplayer
-{ 
-	
+{
+
 	Random chooser = new Random();
 	int Color;
 	int answer;
@@ -15,23 +15,24 @@ public class AIplayer
 	public AIplayer(int playerColor)
 	{
 		Color = playerColor;
-		playerType = "RANDOM";
+	}
+	public void setType(String answer)
+	{
+		playerType = answer;
 	}
 	/*
 	makeMove is going to make a decision about which method to call based on the string playerType.
-	
-	
 	*/
 	public int makeMove (String aMoves, int[][] board)
 	{
-		if(playerType == "RANDOM")
+		if(playerType == "Random")
 			answer = makeRandomMove(aMoves);
-		if(playerType == "DEFENSIVE")
-		 	answer = makeDefensiveMove(aMoves, board);
-		if(playerType == "AGGRESSIVE")
-			answer = makeAggressiveMove(aMoves, board);
-		 if(playerType == "MINIMAX")
-		 	answer = makeMiniMaxMove(aMoves, board);
+		if(playerType == "Defensive")
+		  	answer = makeDefensiveMove(aMoves, board);
+		if(playerType == "Aggressive")
+		 	answer = makeAggressiveMove(aMoves, board);
+		//if(playerType == "Minimax Player")
+		  	//answer = makeMiniMaxMove(aMoves, board);
 		return answer;
 	}
 	public int makeRandomMove(String bMoves)
@@ -59,449 +60,189 @@ public class AIplayer
 	{
 		return chooser.nextInt(7)+1;
 	}
+
 	public int makeDefensiveMove(String cMoves, int[][] board)
 	{
-		int m = genDefensiveMove(board);
-		System.out.println(m+"");
-		boolean gen = true;
-		while(gen)
+		// Array of heuristic values
+		int[] heuristics = new int[cMoves.length()];
+
+		// For each possible move...
+		for(int i=0;i<cMoves.length();i++)
 		{
-			if(cMoves.contains(m+""))
-			{
-				gen = false;
-			}
-			else
-			{
-				m = genDefensiveMove(board);
-				System.out.println(m+"");
+			int move = Character.getNumericValue(cMoves.charAt(i)) - 1; //get possible moves
+			int[][] child1 = makeMove(board, move, 2); //make move for opponent
+			int[][] child2 = makeMove(board, move, 1); //make move for you
+			heuristics[i] = heuristic(child2, 1) - heuristic(child1, 1); //find heuristic for you - opponent
+		}
+
+		// Find the move minimizing token 1's chances at winning
+		int max = Integer.MIN_VALUE;
+		int bestMove = 0;
+		for(int i=0;i<heuristics.length;i++) {
+			if(heuristics[i] > max) {
+				max = heuristics[i];
+				bestMove = i;
 			}
 		}
 
-		return m;
-	}
-	public int genDefensiveMove(int[][] board)
-	{
-		int[] value = new int[7];
-		int max = 0;
-        int num = 3;
-        int sum = 0;
-
-		for (int i=0; i<7; i++)
-        {
-        	for(int j = 0; j<6; j++)
-        	{
-            	int col = i;
-            	int row = j;
-            	//check x direction.
-            	//left
-	            if ((col>=3) 
-	                && (board[row][col-1] == getOppositePlayerColor())
-	                && (board[row][col-2] == getOppositePlayerColor())
-	                && (board[row][col-3] == getOppositePlayerColor()))
-	                value[i] = value[i]+8;
-	            //right
-	            if ((col<=3) 
-	                && (board[row][col+1] == getOppositePlayerColor())
-	                && (board[row][col+2] == getOppositePlayerColor())
-	                && (board[row][col+3] == getOppositePlayerColor()))
-	                value[i] = value[i]+8;
-	            //check y direction
-	            if ((row<=2) 
-	                && (board[row+1][col] == getOppositePlayerColor())
-	                && (board[row+2][col] == getOppositePlayerColor())
-	                && (board[row+3][col] == getOppositePlayerColor()))
-	                value[i] = value[i]+8;
-	            //check left diagonal
-	            if ((col>=3) && (row<=2)
-	                && (board[row+1][col-1] == getOppositePlayerColor())
-	                && (board[row+2][col-2] == getOppositePlayerColor())
-	                && (board[row+3][col-3] == getOppositePlayerColor()))
-	                value[i] = value[i]+8;
-	            
-	            if ((col<=3) && (row<=2)
-	                && (board[row+1][col+1] == getOppositePlayerColor())
-	                && (board[row+2][col+2] == getOppositePlayerColor())
-	                && (board[row+3][col+3] == getOppositePlayerColor()))
-	                value[i] = value[i]+8;
-	            
-	            if ((col>=3) && (row>=3)
-	                && (board[row-1][col-1] == getOppositePlayerColor())
-	                && (board[row-2][col-2] == getOppositePlayerColor())
-	                && (board[row-3][col-3] == getOppositePlayerColor()))
-	                value[i] = value[i]+8;
-	            
-	            if ((col<=3) && (row>=3)
-	                && (board[row-1][col+1] == getOppositePlayerColor())
-	                && (board[row-2][col+2] == getOppositePlayerColor())
-	                && (board[row-3][col+3] == getOppositePlayerColor()))
-	                value[i] = value[i]+8;
-	            
-	            if ((col>=2) 
-	                && (board[row][col-1] == getOppositePlayerColor())
-	                && (board[row][col-2] == getOppositePlayerColor()))
-	                value[i] = value[i]+4;
-	            //right
-	            if ((col<=4) 
-	                && (board[row][col+1] == getOppositePlayerColor())
-	                && (board[row][col+2] == getOppositePlayerColor()))
-	                value[i] = value[i]+4;
-	            //check y direction
-	            if ((row<=3) 
-	                && (board[row+1][col] == getOppositePlayerColor())
-	                && (board[row+2][col] == getOppositePlayerColor()))
-	                value[i] = value[i]+4;
-	            //check left diagonal
-	            if ((col>=2) && (row<=3)
-	                && (board[row+1][col-1] == getOppositePlayerColor())
-	                && (board[row+2][col-2] == getOppositePlayerColor()))
-	                value[i] = value[i]+4;
-	            
-	            if ((col<=4) && (row<=3)
-	                && (board[row+1][col+1] == getOppositePlayerColor())
-	                && (board[row+2][col+2] == getOppositePlayerColor()))
-	                value[i] = value[i]+4;
-	            
-	            if ((col>=2) && (row>=2)
-	                && (board[row-1][col-1] == getOppositePlayerColor())
-	                && (board[row-2][col-2] == getOppositePlayerColor()))
-	                value[i] = value[i]+4;
-	            
-	            if ((col<=4) && (row>=2)
-	                && (board[row-1][col+1] == getOppositePlayerColor())
-	                && (board[row-2][col+2] == getOppositePlayerColor()))
-	                value[i] = value[i]+4;
-	            
-	            if ((col>=1) 
-	                && (board[row][col-1] == getOppositePlayerColor()))
-	                value[i] = value[i]+2;
-	            //right
-	            
-	            if ((col<=5) 
-	                && (board[row][col+1] == getOppositePlayerColor()))
-	                value[i] = value[i]+2;
-	            //check y direction
-	            if ((row<=4) 
-	                && (board[row+1][col] == getOppositePlayerColor()))
-	                value[i] = value[i]+2;
-	            //check left diagonal
-	            if ((col>=1) && (row<=4)
-	                && (board[row+1][col-1] == getOppositePlayerColor()))
-	                value[i] = value[i]+2;
-	            
-	            if ((col<=5) && (row<=4)
-	                && (board[row+1][col+1] == getOppositePlayerColor()))
-	                value[i] = value[i]+2;
-	            
-	            if ((col>=1) && (row>=1)
-	                && (board[row-1][col-1] == getOppositePlayerColor()))
-	                value[i] = value[i]+2;
-	            
-	            if ((col<=5) && (row>=1)
-	                && (board[row-1][col+1] == getOppositePlayerColor()))
-	                value[i] = value[i]+2;   
-          	}              
-        }
-
-        for (int i=0; i<7; i++)
-        {
-            if (value[i] > max)
-            {
-            	max = value[i];
-            	num = i;
-            }
-            sum = sum + value[i];
-        }
-        if (sum == 0)
-        	num = (int)(Math.random()*7);
-        return num;
+		return bestMove + 1;
 	}
 	public int makeAggressiveMove(String dMoves, int[][] board)
 	{
-		int m = genAggressiveMove(board);
-		System.out.println(m+"");
-		boolean gen = true;
-		while(gen)
+		// Array of heuristic values
+		int[] heuristics = new int[dMoves.length()];
+
+		// For each possible move...
+		for(int i=0;i<dMoves.length();i++)
 		{
-			if(dMoves.contains(m+""))
-			{
-				gen = false;
-			}
-			else
-			{
-				m = genAggressiveMove(board);
-				System.out.println(m+"");
+			int move = Character.getNumericValue(dMoves.charAt(i)) - 1; //get possible moves
+			int[][] child1 = makeMove(board, move, 2); //make move for opponent
+			int[][] child2 = makeMove(board, move, 1); //make move for you
+			heuristics[i] = heuristic(child1, 1) - heuristic(child2, 1); //find heuristic for you - opponent
+		}
+
+		// Find the move maximizing token 1's chances at winning
+		int min = Integer.MAX_VALUE;
+		int bestMove = 0;
+		for(int i=0;i<heuristics.length;i++) {
+			if(heuristics[i] < min) {
+				min = heuristics[i];
+				bestMove = i;
 			}
 		}
 
-		return m;
+		return bestMove + 1;
 	}
-	public int genAggressiveMove(int[][] board)
+
+	public int heuristic(int[][] board, int token)
 	{
-		int[] value = new int[7];
-		int max = 0;
-        int num = 3;
-        int sum = 0;
+		int h = 0;
 
-		for (int i=0; i<7; i++)
-        {
-        	for(int j = 0; j<6; j++)
-        	{
-            	int col = i;
-            	int row = j;
-
-            	if ((col>=3) 
-                	&& (board[row][col-1] == getPlayerColor())
-                	&& (board[row][col-2] == getPlayerColor())
-                	&& (board[row][col-3] == getPlayerColor()))
-                	value[i]=value[i]+16;
-	            //right
-	            if ((col<=3) 
-	                && (board[row][col+1] == getPlayerColor())
-	                && (board[row][col+2] == getPlayerColor())
-	                && (board[row][col+3] == getPlayerColor()))
-	                value[i]=value[i]+16;
-	            //check y direction
-	            if ((row<=2) 
-	                && (board[row+1][col] == getPlayerColor())
-	                && (board[row+2][col] == getPlayerColor())
-	                && (board[row+3][col] == getPlayerColor()))
-	                value[i]=value[i]+16;
-	            //check left diagonal
-	            if ((col>=3) && (row<=2)
-	                && (board[row+1][col-1] == getPlayerColor())
-	                && (board[row+2][col-2] == getPlayerColor())
-	                && (board[row+3][col-3] == getPlayerColor()))
-	                value[i]=value[i]+16;
-	            
-	            if ((col<=3) && (row<=2)
-	                && (board[row+1][col+1] == getPlayerColor())
-	                && (board[row+2][col+2] == getPlayerColor())
-	                && (board[row+3][col+3] == getPlayerColor()))
-	                value[i]=value[i]+16;
-	            
-	            if ((col>=3) && (row>=3)
-	                && (board[row-1][col-1] == getPlayerColor())
-	                && (board[row-2][col-2] == getPlayerColor())
-	                && (board[row-3][col-3] == getPlayerColor()))
-	                value[i]=value[i]+16;
-	            
-	            if ((col<=3) && (row>=3)
-	                && (board[row-1][col+1] == getPlayerColor())
-	                && (board[row-2][col+2] == getPlayerColor())
-	                && (board[row-3][col+3] == getPlayerColor()))
-	                value[i]=value[i]+16;
-	            
-	            if ((col>=2) 
-	                && (board[row][col-1] == getPlayerColor())
-	                && (board[row][col-2] == getPlayerColor()))
-	                value[i]=value[i]+4;
-	            //right
-	            if ((col<=4) 
-	                && (board[row][col+1] == getPlayerColor())
-	                && (board[row][col+2] == getPlayerColor()))
-	                value[i]=value[i]+4;
-	            //check y direction
-	            if ((row<=3) 
-	                && (board[row+1][col] == getPlayerColor())
-	                && (board[row+2][col] == getPlayerColor()))
-	                value[i]=value[i]+4;
-	            //check left diagonal
-	            if ((col>=2) && (row<=3)
-	                && (board[row+1][col-1] == getPlayerColor())
-	                && (board[row+2][col-2] == getPlayerColor()))
-	                value[i]=value[i]+4;
-	            
-	            if ((col<=4) && (row<=3)
-	                && (board[row+1][col+1] == getPlayerColor())
-	                && (board[row+2][col+2] == getPlayerColor()))
-	                value[i]=value[i]+4;
-	            
-	            if ((col>=2) && (row>=2)
-	                && (board[row-1][col-1] == getPlayerColor())
-	                && (board[row-2][col-2] == getPlayerColor()))
-	                value[i]=value[i]+4;
-	            
-	            if ((col<=4) && (row>=2)
-	                && (board[row-1][col+1] == getPlayerColor())
-	                && (board[row-2][col+2] == getPlayerColor()))
-	                value[i]=value[i]+4;
-	            
-	            if ((col>=1) 
-	                && (board[row][col-1] == getPlayerColor()))
-	                value[i]=value[i]+2;
-	            //right
-	            
-	            if ((col<=5) 
-	                && (board[row][col+1] == getPlayerColor()))
-	                value[i]=value[i]+2;
-	            //check y direction
-	            if ((row<=4) 
-	                && (board[row+1][col] == getPlayerColor()))
-	                value[i]=value[i]+2;
-	            //check left diagonal
-	            if ((col>=1) && (row<=4)
-	                && (board[row+1][col-1] == getPlayerColor()))
-	                value[i]=value[i]+2;
-	            
-	            if ((col<=5) && (row<=4)
-	                && (board[row+1][col+1] == getPlayerColor()))
-	                value[i]=value[i]+2;
-	            
-	            if ((col>=1) && (row>=1)
-	                && (board[row-1][col-1] == getPlayerColor()))
-	                value[i]=value[i]+2;
-	            
-	            if ((col<=5) && (row>=1)
-	                && (board[row-1][col+1] == getPlayerColor()))
-	                value[i]=value[i]+2;
-	            
-	            //check x direction.
-	            //left
-	            if ((col>=3) 
-	                && (board[row][col-1] == getOppositePlayerColor())
-	                && (board[row][col-2] == getOppositePlayerColor())
-	                && (board[row][col-3] == getOppositePlayerColor()))
-	                value[i]=value[i]+8;
-	            //right
-	            if ((col<=3) 
-	                && (board[row][col+1] == getOppositePlayerColor())
-	                && (board[row][col+2] == getOppositePlayerColor())
-	                && (board[row][col+3] == getOppositePlayerColor()))
-	                value[i]=value[i]+8;
-	            //check y direction
-	            if ((row<=2) 
-	                && (board[row+1][col] == getOppositePlayerColor())
-	                && (board[row+2][col] == getOppositePlayerColor())
-	                && (board[row+3][col] == getOppositePlayerColor()))
-	                value[i]=value[i]+8;
-	            //check left diagonal
-	            if ((col>=3) && (row<=2)
-	                && (board[row+1][col-1] == getOppositePlayerColor())
-	                && (board[row+2][col-2] == getOppositePlayerColor())
-	                && (board[row+3][col-3] == getOppositePlayerColor()))
-	                value[i]=value[i]+8;
-	            
-	            if ((col<=3) && (row<=2)
-	                && (board[row+1][col+1] == getOppositePlayerColor())
-	                && (board[row+2][col+2] == getOppositePlayerColor())
-	                && (board[row+3][col+3] == getOppositePlayerColor()))
-	                value[i]=value[i]+8;
-	            
-	            if ((col>=3) && (row>=3)
-	                && (board[row-1][col-1] == getOppositePlayerColor())
-	                && (board[row-2][col-2] == getOppositePlayerColor())
-	                && (board[row-3][col-3] == getOppositePlayerColor()))
-	                value[i]=value[i]+8;
-	            
-	            if ((col<=3) && (row>=3)
-	                && (board[row-1][col+1] == getOppositePlayerColor())
-	                && (board[row-2][col+2] == getOppositePlayerColor())
-	                && (board[row-3][col+3] == getOppositePlayerColor()))
-	                value[i]=value[i]+8;
-	            
-	            if ((col>=2) 
-	                && (board[row][col-1] == getOppositePlayerColor())
-	                && (board[row][col-2] == getOppositePlayerColor()))
-	                value[i]=value[i]+4;
-	            //right
-	            if ((col<=4) 
-	                && (board[row][col+1] == getOppositePlayerColor())
-	                && (board[row][col+2] == getOppositePlayerColor()))
-	                value[i]=value[i]+4;
-	            //check y direction
-	            if ((row<=3) 
-	                && (board[row+1][col] == getOppositePlayerColor())
-	                && (board[row+2][col] == getOppositePlayerColor()))
-	                value[i]=value[i]+4;
-	            //check left diagonal
-	            if ((col>=2) && (row<=3)
-	                && (board[row+1][col-1] == getOppositePlayerColor())
-	                && (board[row+2][col-2] == getOppositePlayerColor()))
-	                value[i]=value[i]+4;
-	            
-	            if ((col<=4) && (row<=3)
-	                && (board[row+1][col+1] == getOppositePlayerColor())
-	                && (board[row+2][col+2] == getOppositePlayerColor()))
-	                value[i]=value[i]+4;
-	            
-	            if ((col>=2) && (row>=2)
-	                && (board[row-1][col-1] == getOppositePlayerColor())
-	                && (board[row-2][col-2] == getOppositePlayerColor()))
-	                value[i]=value[i]+4;
-	            
-	            if ((col<=4) && (row>=2)
-	                && (board[row-1][col+1] == getOppositePlayerColor())
-	                && (board[row-2][col+2] == getOppositePlayerColor()))
-	                value[i]=value[i]+4;
-	            
-	            if ((col>=1) 
-	                && (board[row][col-1] == getOppositePlayerColor()))
-	                value[i]=value[i]+2;
-	            //right
-	            
-	            if ((col<=5) 
-	                && (board[row][col+1] == getOppositePlayerColor()))
-	                value[i]=value[i]+2;
-	            //check y direction
-	            if ((row<=4) 
-	                && (board[row+1][col] == getOppositePlayerColor()))
-	                value[i]=value[i]+2;
-	            //check left diagonal
-	            if ((col>=1) && (row<=4)
-	                && (board[row+1][col-1] == getOppositePlayerColor()))
-	                value[i]=value[i]+2;
-	            
-	            if ((col<=5) && (row<=4)
-	                && (board[row+1][col+1] == getOppositePlayerColor()))
-	                value[i]=value[i]+2;
-	            
-	            if ((col>=1) && (row>=1)
-	                && (board[row-1][col-1] == getOppositePlayerColor()))
-	                value[i]=value[i]+2;
-	            
-	            if ((col<=5) && (row>=1)
-	                && (board[row-1][col+1] == getOppositePlayerColor()))
-	                value[i]=value[i]+2;            
-          	}              
-        }
-
-        for (int i=0; i<7; i++)
-        {
-            if (value[i] > max)
-            {
-            	max = value[i];
-            	num = i;
-            }
-            sum = sum + value[i];
-        }
-        if (sum == 0)
-        	num = (int)(Math.random()*7);
-        return num;
-	}
-	public int makeMiniMaxMove(String eMoves, int[][] board)
-	{
-		int m = genMiniMaxMove(board);
-		System.out.println(m+"");
-		boolean gen = true;
-		while(gen)
+		// Look at sequences in the rows
+		for(int row=0;row<6;row++)
 		{
-			if(eMoves.contains(m+""))
-			{
-				gen = false;
+			int count = 0;
+		    for(int col=0;col<7;col++)
+		    {
+				if(board[row][col] == token)
+				{
+					count++;
+				}
+		        else
+		        {
+					h+=utility(count);
+					count = 0;
+				}
 			}
-			else
+			h+=utility(count);
+		}
+
+		// Look at sequences in the columns
+		for(int col = 0;col<7;col++)
+		{
+			int count = 0;
+		    for(int row = 0;row<6;row++)
+		    {
+				if(board[row][col] == token)
+				{
+					count++;
+				}
+		        else
+		        {
+					h+=utility(count);
+					count = 0;
+				}
+			}
+			h+=utility(count);
+		}
+
+		// Look at sequences in the diagonals
+		for(int col = 0;col<7;col++)
+		{
+			int count = 0;
+			for(int row = 0;row<6;row++)
 			{
-				m = genMiniMaxMove(board);
-				System.out.println(m+"");
+				count = 0;
+				for(int delta = 0;delta<6;delta++)
+				{
+					if((row+delta) < 6 && (col+delta) < 7)
+					{
+						if(board[row+delta][col+delta] == token)
+						{
+							count++;
+						}
+						else
+						{
+							h+=utility(count);
+							count = 0;
+						}
+					}
+				}
+			}
+			h+=utility(count);
+		}
+
+		return h;
+	}
+
+	private int utility(int count) {
+		if(count == 2)
+		{
+			return 10;
+		}
+		else if(count == 3)
+		{
+			return 100;
+		}
+		else if(count>=4)
+		{
+			return 666666;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	private int[][] makeMove(int[][] board, int column, int token)
+	{
+		int[][] result = new int[6][7];
+
+		// copy the array into result
+		for(int row = 0;row<6;row++)
+		{
+			for(int col=0;col<7;col++)
+			{
+				result[row][col] = board[row][col];
 			}
 		}
 
-		return m;
+		// place token into col
+		for(int row = 5;row>=0;row--)
+		{
+			if(result[row][column] == 0)
+			{
+				result[row][column] = token;
+				return result;
+			}
+		}
+
+		//in case you get here, but you shouldnt
+		return result;
 	}
-	public int genMiniMaxMove(int[][] board)
-	{
-		return 0;
-	}
+
+	private int min(int r, int c)
+    {
+        if(r < c)
+            return r;
+        else return c;
+    }
+    private int max(int r, int c)
+    {
+    	if(r > c)
+    		return r;
+    	else return c;
+    }
 
 	public int getPlayerColor()
 	{
@@ -523,13 +264,11 @@ public class AIplayer
 	}
 	/*
 	The Connect 4 game will push the score in a setter to AI player which will then change playerType based on that.
-	
 	*/
-	 public void setPlayerType(int score)
-	 {
-	 		if(score < 20)
-	 			playerType = "RANDOM";
-			
-	 		return;
-	 }
+	public void setPlayerType(int score)
+	{
+			if(score < 20)
+				playerType = "RANDOM";
+			return;
+	}
 }
