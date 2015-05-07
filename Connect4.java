@@ -131,6 +131,7 @@ class Connect4UI extends JFrame implements ActionListener
                	gameover=false;
                 activeColour = RED;
         	System.out.println("Next game starting. Round:" + (round));
+        	//handels switching of aitype if learning ai is chosen
                 if (!isLearning)
 			{
 				Object[] possibilities = {"Random", "Defensive", "Aggressive", "Dumb", "Learning"};
@@ -192,7 +193,7 @@ class Connect4UI extends JFrame implements ActionListener
                 n--;
                 for (row=0; row<MAXROW; row++)
                         if (n>6 || boardArray[row][n]>0) break;
-                
+                //places token then checks if that move was winning, if not causes ai to pick a column
                 if (row>0) 
                {
                         boardArray[--row][n]=activeColour;
@@ -265,6 +266,7 @@ class Connect4UI extends JFrame implements ActionListener
         	int counter = 0;
         	boolean subtract = false;
         	//failing to block a potentially winning move and opponent in a position where they can win multiple ways
+        	//horizontal check
         	for (int row=0; row<MAXROW; row++) 
                {
                         for (int col=0; col<MAXCOL-3; col++) 
@@ -279,6 +281,7 @@ class Connect4UI extends JFrame implements ActionListener
                                 }
                         }
                 }
+                //vertical check
                 for (int col=0; col<MAXCOL; col++) 
                {
                         for (int row=0; row<MAXROW-3; row++) 
@@ -293,6 +296,7 @@ class Connect4UI extends JFrame implements ActionListener
                                  }
                         }
                 }
+                //positive slope diagonal check
                 for (int row=0; row<MAXROW-3; row++) 
                 {
                         for (int col=0; col<MAXCOL-3; col++) 
@@ -307,6 +311,7 @@ class Connect4UI extends JFrame implements ActionListener
                                  }
                         }
                 }
+                //negative slope diagonal check
                 for (int row=MAXROW-1; row>=3; row--) 
                {
                         for (int col=0; col<MAXCOL-3; col++) 
