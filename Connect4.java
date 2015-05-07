@@ -5,11 +5,50 @@ import java.awt.event.*;
 public class Connect4 {
         public static void main(String[] args) 
        {
+                //Connect4Menu menu = new Connect4Menu();
                 Connect4UI frame = new Connect4UI();
                 frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE);
                 frame.setVisible(true);
         }
 }
+// class Connect4Menu extends JFrame
+// {
+//     public Connect4Menu()
+//     {
+//         EventQueue.invokeLater(new Runnable()
+//         {
+//             public void run()
+//             {
+//                 try
+//                 {
+//                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//                 }
+//                 catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex)
+//                 {
+//                     System.out.println("Exception");
+//                 }
+
+//                 JPanel panel = new JPanel();
+//                 panel.add(new JLabel("Choose player 1:"));
+//                 DefaultComboBoxModel model = new DefaultComboBoxModel();
+//                 model.addElement("Human Player");
+//                 JComboBox comboBox = new JComboBox(model);
+//                 panel.add(comboBox);
+//                 panel.add(new JLabel("Choose player2:"));
+//                 DefaultComboBoxModel model2 = new DefaultComboBoxModel();
+//                 model2.addElement("Dumb Player");
+//                 model2.addElement("Aggressive Player");
+//                 model2.addElement("Defensive Player");
+//                 model2.addElement("Minimax Player");
+//                 model2.addElement("AI Player");
+//                 JComboBox comboBox2 = new JComboBox(model2);
+//                 panel.add(comboBox2);
+
+//                 int result = JOptionPane.showConfirmDialog(null, panel, "Players", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);                
+//             }
+//         });
+//     }
+//  }
  
 class Connect4UI extends JFrame implements ActionListener 
 {
@@ -29,7 +68,7 @@ class Connect4UI extends JFrame implements ActionListener
         public static final int BLUE = 2;
         public static final int MAXROW = 6;     
         public static final int MAXCOL = 7;     
-        public static final String SPACE = "                  "; 
+        public static final String SPACE = "     "; 
         AIplayer AIplayer;
         int activeColour = RED;
        
