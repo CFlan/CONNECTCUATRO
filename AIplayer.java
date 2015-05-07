@@ -115,6 +115,15 @@ public class AIplayer
 
 	public int heuristic(int[][] board, int token)
 	{
+<<<<<<< HEAD
+=======
+			if(score < 20)
+				playerType = "RANDOM";
+			return;
+	}
+
+	public int heuristic(int[][] board, int token) {
+>>>>>>> f8db55b02d19f993c57c42f438da7bfd70fca762
 		int h = 0;
 
 		// Look at sequences in the rows
