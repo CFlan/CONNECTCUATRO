@@ -5,51 +5,12 @@ import java.awt.event.*;
 public class Connect4 {
         public static void main(String[] args) 
        {
-                //Connect4Menu menu = new Connect4Menu();
                 Connect4UI frame = new Connect4UI();
                 frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE);
                 frame.setVisible(true);
         }
 }
-// class Connect4Menu extends JFrame
-// {
-//     public Connect4Menu()
-//     {
-//         EventQueue.invokeLater(new Runnable()
-//         {
-//             public void run()
-//             {
-//                 try
-//                 {
-//                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-//                 }
-//                 catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex)
-//                 {
-//                     System.out.println("Exception");
-//                 }
 
-//                 JPanel panel = new JPanel();
-//                 panel.add(new JLabel("Choose player 1:"));
-//                 DefaultComboBoxModel model = new DefaultComboBoxModel();
-//                 model.addElement("Human Player");
-//                 JComboBox comboBox = new JComboBox(model);
-//                 panel.add(comboBox);
-//                 panel.add(new JLabel("Choose player2:"));
-//                 DefaultComboBoxModel model2 = new DefaultComboBoxModel();
-//                 model2.addElement("Dumb Player");
-//                 model2.addElement("Aggressive Player");
-//                 model2.addElement("Defensive Player");
-//                 model2.addElement("Minimax Player");
-//                 model2.addElement("AI Player");
-//                 JComboBox comboBox2 = new JComboBox(model2);
-//                 panel.add(comboBox2);
-
-//                 int result = JOptionPane.showConfirmDialog(null, panel, "Players", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);                
-//             }
-//         });
-//     }
-//  }
- 
 class Connect4UI extends JFrame implements ActionListener 
 {
         private JButton column1, column2, column3, column4, column5, column6, column7;
@@ -59,6 +20,7 @@ class Connect4UI extends JFrame implements ActionListener
         boolean                 gameover;
         boolean                 first;
         boolean			sim = false;
+		boolean			isLearning = false;
         int		round=1;
         int		wins = 0;
         int		score = 50;
@@ -140,6 +102,7 @@ class Connect4UI extends JFrame implements ActionListener
                 add(panel, BorderLayout.NORTH);
                 setup();
                 setSize(1024, 768);
+
         }
  
         public void setup() 
@@ -152,7 +115,30 @@ class Connect4UI extends JFrame implements ActionListener
                	gameover=false;
                 activeColour = RED;
         	System.out.println("Next game starting. Round:" + (round) + " " + gameover + " " + activeColour);
-                AIplayer = new AIplayer(BLUE);
+			if (!isLearning)
+			{
+				Object[] possibilities = {"Random", "Defensive", "Aggressive", "MiniMax", "Learning"};
+				String answer = (String)JOptionPane.showInputDialog(
+					null,
+					"What type of player do you want to play?\n",
+					"Difficulty",
+					JOptionPane.PLAIN_MESSAGE,
+					null,
+					possibilities,
+					"Learning");
+					if (answer == "Learning")
+					{
+						isLearning = true;
+						answer = "Random";
+					}
+					else
+					{
+						isLearning = false;
+					}
+					AIplayer = new AIplayer(BLUE);
+					System.out.println("Answers = " + answer);
+					AIplayer.setType(answer);
+			}
         }
  
         public void paint(Graphics g) 
@@ -407,6 +393,7 @@ class Connect4UI extends JFrame implements ActionListener
                         gameover=false;
                         setup();
                         repaint();
+						//Connect4Menu menu = new Connect4Menu();
                        
                 } 
                 else if (e.getSource() == exitGame) 
