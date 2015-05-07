@@ -157,7 +157,7 @@ class Connect4UI extends JFrame implements ActionListener
 			}
 		else
 		{
-			AIplayer.setType(score);
+			AIplayer.setPlayerType(score);
 		}
         }
         //updates gui to display current board
@@ -587,7 +587,7 @@ class Connect4UI extends JFrame implements ActionListener
                		else if(score > 69)
                			rank = "Wumpus Hunta";
                		else if(score >59)
-               			rank = "Good Enough That These ArenÃ¢â‚¬â„¢t Insults Any More";
+               			rank = "Good Enough That These ArenÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢t Insults Any More";
                		else if(score>49)
                			rank = "The Line Between Competence and Anarchy";
                		else if(score>39)
