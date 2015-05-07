@@ -85,7 +85,7 @@ public class AIplayer
 		int m = 0;
 		boolean win = true;
 		int row;
-		while(counter <10){
+		while(counter <80){
 		m = makeRandomMove(cMoves);
 		for (row=0; row<MAXROW; row++)
                         if (m>6 || board[row][m]>0) break;
