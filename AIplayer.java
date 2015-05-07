@@ -11,6 +11,8 @@ public class AIplayer
 	Random chooser = new Random();
 	int Color;
 	int answer;
+        public static final int MAXROW = 6;     
+        public static final int MAXCOL = 7; 
 	String playerType;
 	public AIplayer(int playerColor)
 	{
@@ -77,31 +79,27 @@ public class AIplayer
 	}
 	public int makeDumbMove(String cMoves, int[][] board, int lastTry)
 	{
-		// Array of heuristic values
-		int[] heuristics = new int[cMoves.length()];
-
-		// For each possible move...
-		for(int i=0;i<cMoves.length();i++)
-		{
-			int move = Character.getNumericValue(cMoves.charAt(i)) - 1; //get possible moves
-			int[][] child1 = makeMove(board, move, 2); //make move for opponent
-			int[][] child2 = makeMove(board, move, 1); //make move for you
-			heuristics[i] = heuristic(child2, 1) - heuristic(child1, 1); //find heuristic for you - opponent
+		// Make a random move, if its a winning move rerandom
+		
+		int counter = 0;
+		int m = 0;
+		boolean win = true;
+		int row;
+		while(counter <10){
+		m = makeRandomMove(cMoves);
+		for (row=0; row<MAXROW; row++)
+                        if (m>6 || board[row][m]>0) break;
+                if (row>0) 
+               {
+                        board[--row][m]=2;
+                        win = gameStatus(board);
+                        board[row][m]=0;
+                        if(!win)	
+                        	return m;
+                }
+                counter++;
 		}
-
-		// Find the move maximizing token 1's chances at winning
-		int max = Integer.MAX_VALUE;
-		int worstMove = 0;
-		for(int i=0;i<heuristics.length;i++)
-		{
-			if(heuristics[i] < max && !(i==lastTry))
-			{
-				max = heuristics[i];
-				worstMove = i;
-			}
-		}
-
-		return worstMove + 1;
+		return m;
 	}
 	public int makeDefensiveMove(String cMoves, int[][] board, int lastTry)
 	{
@@ -308,9 +306,67 @@ public class AIplayer
 			else if(score < 20)
 				playerType = "Random";
 			else if(score >= 20 && score < 50)
-				playerType = "Defensive";
-			else if(score >= 50)
 				playerType = "Aggressive";
+			else if(score >= 50)
+				playerType = "Defensive";
 			return;
 	}
+	//check to see if move is winning move
+	public boolean gameStatus(int[][]board)
+        {
+        	int[][] boardArray = board;
+        	for (int row=0; row<MAXROW; row++) 
+               {
+                        for (int col=0; col<MAXCOL-3; col++) 
+                       {
+                                int slot = boardArray[row][col];
+                                if (slot>0
+                                 && slot == boardArray[row][col+1]
+                                 && slot == boardArray[row][col+2]
+                                 && slot == boardArray[row][col+3]) {
+                                        return true;
+                                }
+                        }
+                }
+                for (int col=0; col<MAXCOL; col++) 
+               {
+                        for (int row=0; row<MAXROW-3; row++) 
+                       {
+                                int slot = boardArray[row][col];
+                                if (slot>0
+                                 && slot == boardArray[row+1][col]
+                                 && slot == boardArray[row+2][col]
+                                 && slot == boardArray[row+3][col]){
+                                        return true;
+                                 }
+                        }
+                }
+                for (int row=0; row<MAXROW-3; row++) 
+                {
+                        for (int col=0; col<MAXCOL-3; col++) 
+                       {
+                                int slot = boardArray[row][col];
+                                if (slot>0
+                                 && slot == boardArray[row+1][col+1]
+                                 && slot == boardArray[row+2][col+2]
+                                 && slot == boardArray[row+3][col+3]){
+                                        return true;
+                                 }
+                        }
+                }
+                for (int row=MAXROW-1; row>=3; row--) 
+               {
+                        for (int col=0; col<MAXCOL-3; col++) 
+                       {
+                                int slot = boardArray[row][col];
+                                if (slot>0
+                                 && slot == boardArray[row-1][col+1]
+                                 && slot == boardArray[row-2][col+2]
+                                 && slot == boardArray[row-3][col+3]){
+                                        return true;
+                                 }
+                        }
+                }
+                return false;
+        }
 }
