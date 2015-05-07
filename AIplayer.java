@@ -264,6 +264,10 @@ public class AIplayer
 	{
 			if(score < 20)
 				playerType = "RANDOM";
+			else if(score >= 20 && score < 50)
+				playerType = "Defensive";
+			else if(score >= 50)
+				playerType = "Aggressive";
 			return;
 	}
 }
