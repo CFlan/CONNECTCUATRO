@@ -37,9 +37,9 @@ public class AIplayer
 		if(playerType == "Random")
 			answer = makeRandomMove(aMoves);
 		if(playerType == "Defensive")
-		  	answer = makeDefensiveMove(aMoves, board);
+		  	answer = makeDefensiveMove(aMoves, board, answer);
 		if(playerType == "Aggressive")
-		 	answer = makeAggressiveMove(aMoves, board);
+		 	answer = makeAggressiveMove(aMoves, board, answer);
 			}
 		//  if(playerType == "MINIMAX")
 		//  	answer = makeMiniMaxMove(aMoves, board);
@@ -71,7 +71,7 @@ public class AIplayer
 		return chooser.nextInt(7)+1;
 	}
 
-	public int makeDefensiveMove(String cMoves, int[][] board)
+	public int makeDefensiveMove(String cMoves, int[][] board, int lastTry)
 	{
 		// Array of heuristic values
 		int[] heuristics = new int[cMoves.length()];
@@ -90,7 +90,7 @@ public class AIplayer
 		int bestMove = 0;
 		for(int i=0;i<heuristics.length;i++)
 		{
-			if(heuristics[i] > max)
+			if(heuristics[i] > max && !(i==lastTry))
 			{
 				max = heuristics[i];
 				bestMove = i;
@@ -99,7 +99,7 @@ public class AIplayer
 
 		return bestMove + 1;
 	}
-	public int makeAggressiveMove(String dMoves, int[][] board)
+	public int makeAggressiveMove(String dMoves, int[][] board, int lastTry)
 	{
 		// Array of heuristic values
 		int[] heuristics = new int[dMoves.length()];
@@ -118,7 +118,7 @@ public class AIplayer
 		int bestMove = 0;
 		for(int i=0;i<heuristics.length;i++)
 		{
-			if(heuristics[i] < min)
+			if(heuristics[i] < min && !(i==lastTry))
 			{
 				min = heuristics[i];
 				bestMove = i;
