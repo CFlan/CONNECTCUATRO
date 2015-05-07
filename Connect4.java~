@@ -133,7 +133,7 @@ class Connect4UI extends JFrame implements ActionListener
         	System.out.println("Next game starting. Round:" + (round));
                 if (!isLearning)
 			{
-				Object[] possibilities = {"Random", "Defensive", "Aggressive", "Dumb", "Learning"};
+				Object[] possibilities = {"Random", "Defensive", "Aggressive", "MiniMax", "Learning"};
 				String answer = (String)JOptionPane.showInputDialog(
 					null,
 					"What type of player do you want to play?\n",
