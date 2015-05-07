@@ -1,5 +1,6 @@
 # CONNECTCUATRO
 To Build:
+
 1. Place both .java files in the same directory
 
 2. Navigate to that directory in console
@@ -7,6 +8,7 @@ To Build:
 3. Javac *.java
 
 To Run:
+
 1. Navigate to the directory containing the .class files
 
 2. java Connect4
