@@ -64,7 +64,6 @@ public class AIplayer
 			else
 			{
 				m = genRandomMove();
-				System.out.println(m+"");
 			}
 		}
 
