@@ -31,6 +31,8 @@ class Connect4UI extends JFrame implements ActionListener
         boolean                 first;
         //Whether game is over
         boolean			sim = false;
+        //boolean  used to decide which AI to play
+        boolean			isLearning = false;
         //Current round
         int		round=1;
         //Current number of wins
@@ -129,7 +131,34 @@ class Connect4UI extends JFrame implements ActionListener
                	gameover=false;
                 activeColour = RED;
         	System.out.println("Next game starting. Round:" + (round));
-                AIplayer = new AIplayer(BLUE);
+                if (!isLearning)
+			{
+				Object[] possibilities = {"Random", "Defensive", "Aggressive", "MiniMax", "Learning"};
+				String answer = (String)JOptionPane.showInputDialog(
+					null,
+					"What type of player do you want to play?\n",
+					"Difficulty",
+					JOptionPane.PLAIN_MESSAGE,
+					null,
+					possibilities,
+					"Learning");
+					if (answer == "Learning")
+					{
+						isLearning = true;
+						answer = "Random";
+					}
+					else
+					{
+						isLearning = false;
+					}
+					AIplayer = new AIplayer(BLUE);
+					System.out.println("Answers = " + answer);
+					AIplayer.setType(answer);
+			}
+		else
+		{
+			AIplayer.setType(score);
+		}
         }
         //updates gui to display current board
         public void paint(Graphics g) 
@@ -558,7 +587,7 @@ class Connect4UI extends JFrame implements ActionListener
                		else if(score > 69)
                			rank = "Wumpus Hunta";
                		else if(score >59)
-               			rank = "Good Enough That These Arenâ€™t Insults Any More";
+               			rank = "Good Enough That These ArenÃ¢â‚¬â„¢t Insults Any More";
                		else if(score>49)
                			rank = "The Line Between Competence and Anarchy";
                		else if(score>39)
