@@ -41,6 +41,7 @@ public class AIplayer
 		if(playerType == "Aggressive")
 		 	answer = makeAggressiveMove(aMoves, board, answer);
 			}
+			System.out.println("answer:"+answer+" aMoves:"+aMoves);
 		//  if(playerType == "MINIMAX")
 		//  	answer = makeMiniMaxMove(aMoves, board);
 		}
