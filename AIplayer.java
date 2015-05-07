@@ -27,9 +27,9 @@ public class AIplayer
 		//if(playerType == "RANDOM")
 		//	answer = makeRandomMove(aMoves);
 		//if(playerType == "DEFENSIVE")
-		  	answer = makeDefensiveMove(aMoves, board);
+		//  	answer = makeDefensiveMove(aMoves, board);
 		// if(playerType == "AGGRESSIVE")
-		// 	answer = makeAggressiveMove(aMoves, board);
+		 	answer = makeAggressiveMove(aMoves, board);
 		//  if(playerType == "MINIMAX")
 		//  	answer = makeMiniMaxMove(aMoves, board);
 		return answer;
@@ -66,15 +66,12 @@ public class AIplayer
 		int[] heuristics = new int[cMoves.length()];
 
 		// For each possible move...
-		for(int i=0;i<cMoves.length();i++) {
-			int move = Character.getNumericValue(cMoves.charAt(i)) - 1;
-			int[][] child1 = makeMove(board, move, 2);
-			int[][] child2 = makeMove(board, move, 1);
-			heuristics[i] = heuristic(child2, 1) - heuristic(child1, 1);
-		}
-
-		for(int i=0;i<heuristics.length;i++) {
-			System.out.println(heuristics[i]);
+		for(int i=0;i<cMoves.length();i++)
+		{
+			int move = Character.getNumericValue(cMoves.charAt(i)) - 1; //get possible moves
+			int[][] child1 = makeMove(board, move, 2); //make move for opponent
+			int[][] child2 = makeMove(board, move, 1); //make move for you
+			heuristics[i] = heuristic(child2, 1) - heuristic(child1, 1); //find heuristic for you - opponent
 		}
 
 		// Find the move minimizing token 1's chances at winning
@@ -89,8 +86,162 @@ public class AIplayer
 
 		return bestMove + 1;
 	}
+	public int makeAggressiveMove(String dMoves, int[][] board)
+	{
+		// Array of heuristic values
+		int[] heuristics = new int[dMoves.length()];
 
-	/
+		// For each possible move...
+		for(int i=0;i<dMoves.length();i++)
+		{
+			int move = Character.getNumericValue(dMoves.charAt(i)) - 1; //get possible moves
+			int[][] child1 = makeMove(board, move, 2); //make move for opponent
+			int[][] child2 = makeMove(board, move, 1); //make move for you
+			heuristics[i] = heuristic(child1, 1) - heuristic(child2, 1); //find heuristic for you - opponent
+		}
+
+		// Find the move maximizing token 1's chances at winning
+		int min = Integer.MAX_VALUE;
+		int bestMove = 0;
+		for(int i=0;i<heuristics.length;i++) {
+			if(heuristics[i] < min) {
+				min = heuristics[i];
+				bestMove = i;
+			}
+		}
+
+		return bestMove + 1;
+	}
+
+	public int heuristic(int[][] board, int token)
+	{
+		int h = 0;
+
+		// Look at sequences in the rows
+		for(int row=0;row<6;row++)
+		{
+			int count = 0;
+		    for(int col=0;col<7;col++)
+		    {
+				if(board[row][col] == token)
+				{
+					count++;
+				}
+		        else
+		        {
+					h+=utility(count);
+					count = 0;
+				}
+			}
+			h+=utility(count);
+		}
+
+		// Look at sequences in the columns
+		for(int col = 0;col<7;col++)
+		{
+			int count = 0;
+		    for(int row = 0;row<6;row++)
+		    {
+				if(board[row][col] == token)
+				{
+					count++;
+				}
+		        else
+		        {
+					h+=utility(count);
+					count = 0;
+				}
+			}
+			h+=utility(count);
+		}
+
+		// Look at sequences in the diagonals
+		for(int col = 0;col<7;col++)
+		{
+			int count = 0;
+			for(int row = 0;row<6;row++)
+			{
+				count = 0;
+				for(int delta = 0;delta<6;delta++)
+				{
+					if((row+delta) < 6 && (col+delta) < 7)
+					{
+						if(board[row+delta][col+delta] == token)
+						{
+							count++;
+						}
+						else
+						{
+							h+=utility(count);
+							count = 0;
+						}
+					}
+				}
+			}
+			h+=utility(count);
+		}
+
+		return h;
+	}
+
+	private int utility(int count) {
+		if(count == 2)
+		{
+			return 10;
+		}
+		else if(count == 3)
+		{
+			return 100;
+		}
+		else if(count>=4)
+		{
+			return 666666;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
+	private int[][] makeMove(int[][] board, int column, int token)
+	{
+		int[][] result = new int[6][7];
+
+		// copy the array into result
+		for(int row = 0;row<6;row++)
+		{
+			for(int col=0;col<7;col++)
+			{
+				result[row][col] = board[row][col];
+			}
+		}
+
+		// place token into col
+		for(int row = 5;row>=0;row--)
+		{
+			if(result[row][column] == 0)
+			{
+				result[row][column] = token;
+				return result;
+			}
+		}
+
+		//in case you get here, but you shouldnt
+		return result;
+	}
+
+	private int min(int r, int c)
+    {
+        if(r < c)
+            return r;
+        else return c;
+    }
+    private int max(int r, int c)
+    {
+    	if(r > c)
+    		return r;
+    	else return c;
+    }
 
 	public int getPlayerColor()
 	{
@@ -120,91 +271,5 @@ public class AIplayer
 				playerType = "RANDOM";
 			return;
 	}
-
-	// http://stackoverflow.com/questions/21146940/connect-4-java-win-conditions-check
-	public int heuristic(int[][] board, int token) {
-		int h = 0;
-
-		// Look at sequences in the rows
-		for(int row=0;row<6;row++) {
-			int count = 0;
-		    for(int col=0;col<7;col++) {
-				if(board[row][col] == token) {
-					count++;
-				}
-		        else {
-					h+=utility(count);
-					count = 0;
-				}
-			}
-			h+=utility(count);
-		}
-
-		// Look at sequences in the columns
-		for(int col = 0;col<7;col++) {
-			int count = 0;
-		    for(int row = 0;row<6;row++) {
-				if(board[row][col] == token) {
-					count++;
-				}
-		        else {
-					h+=utility(count);
-					count = 0;
-				}
-			}
-			h+=utility(count);
-		}
-
-		return h;
-	}
-
-	private void printBoard(int[][] board) {
-		for(int x=0;x<board.length;x++) {
-			for(int y=0;y<board[0].length;y++) {
-				System.out.print(board[x][y]);
-			}
-			System.out.println();
-		}
-	}
-
-	private int utility(int count) {
-		if(count == 2) {
-			return 10;
-		} else if(count == 3) {
-			return 100;
-		} else if(count>=4) {
-			return 666666;
-		} else {
-			return 0;
-		}
-	}
-
-	private int[][] makeMove(int[][] board, int column, int token) {
-		int[][] result = new int[6][7];
-
-		// copy the array into result
-		for(int row = 0;row<6;row++) {
-			for(int col=0;col<7;col++) {
-				result[row][col] = board[row][col];
-			}
-		}
-
-		// place token into col
-		for(int row = 5;row>=0;row--) {
-			if(result[row][column] == 0){
-				result[row][column] = token;
-				return result;
-			}
-		}
-
-		// probably shouldn't get here
-		return result;
-	}
-
-	private int min(int r, int c)
-    {
-        if(r < c)
-            return r;
-        else return c;
-    }
 }
+
