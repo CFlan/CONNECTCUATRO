@@ -43,6 +43,8 @@ public class AIplayer
 		  	answer = makeDefensiveMove(aMoves, board, answer);
 		if(playerType == "Aggressive")
 		 	answer = makeAggressiveMove(aMoves, board, answer);
+		if(playerType == "Dumb")
+		 	answer = makeDumbMove(aMoves, board, answer);
 			}
 			counter++;
 		//  if(playerType == "MINIMAX")
@@ -73,7 +75,34 @@ public class AIplayer
 	{
 		return chooser.nextInt(7)+1;
 	}
+	public int makeDumbMove(String cMoves, int[][] board, int lastTry)
+	{
+		// Array of heuristic values
+		int[] heuristics = new int[cMoves.length()];
 
+		// For each possible move...
+		for(int i=0;i<cMoves.length();i++)
+		{
+			int move = Character.getNumericValue(cMoves.charAt(i)) - 1; //get possible moves
+			int[][] child1 = makeMove(board, move, 2); //make move for opponent
+			int[][] child2 = makeMove(board, move, 1); //make move for you
+			heuristics[i] = heuristic(child2, 1) - heuristic(child1, 1); //find heuristic for you - opponent
+		}
+
+		// Find the move maximizing token 1's chances at winning
+		int max = Integer.MAX_VALUE;
+		int worstMove = 0;
+		for(int i=0;i<heuristics.length;i++)
+		{
+			if(heuristics[i] < max && !(i==lastTry))
+			{
+				max = heuristics[i];
+				worstMove = i;
+			}
+		}
+
+		return worstMove + 1;
+	}
 	public int makeDefensiveMove(String cMoves, int[][] board, int lastTry)
 	{
 		// Array of heuristic values
@@ -274,8 +303,10 @@ public class AIplayer
 	*/
 	public void setPlayerType(int score)
 	{
-			if(score < 20)
-				playerType = "RANDOM";
+			if (score == 0)
+				playerType = "Dumb";
+			else if(score < 20)
+				playerType = "Random";
 			else if(score >= 20 && score < 50)
 				playerType = "Defensive";
 			else if(score >= 50)
