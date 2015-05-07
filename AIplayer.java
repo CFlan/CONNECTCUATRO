@@ -41,7 +41,6 @@ public class AIplayer
 	{
 		//all the random player should care about is picking a column to drop in.
 		int m = genRandomMove();
-		System.out.println(m+"");
 		boolean gen = true;
 		while(gen)
 		{
