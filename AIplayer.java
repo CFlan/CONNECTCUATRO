@@ -1,37 +1,46 @@
 /*
 Connor Flanagan, Cristopher Spanos, Surya Teja Chinta, Kari Gilbertson
-This is the code for the random AI for connect 4
+AI players for connect 4
 */
 
 import java.util.Random;
-
+//The player class
 public class AIplayer
 {
-
 	Random chooser = new Random();
+	//Color of the AI player
 	int Color;
+	//Move made by the makeMove method
 	int answer;
+	//Size of the board
         public static final int MAXROW = 6;     
         public static final int MAXCOL = 7; 
+	//String containing the name of the player type
 	String playerType;
+	/*Constructor for the AI player
+	@args color of the AI player
+	*/
 	public AIplayer(int playerColor)
 	{
 		Color = playerColor;
 	}
+	/*Setter for the player type
+	@args string of the type of player
+	*/
 	public void setType(String answer)
 	{
 		playerType = answer;
 	}
-	/*
-	makeMove is going to make a decision about which method to call based on the string playerType.
-
-
+	/*makeMove is going to make a decision about which method to call based on the string playerType.
+	@args aMoves- the string containing all available moves, board- the array of the board
+	@returns result of various make move methods
 	*/
 	public int makeMove (String aMoves, int[][] board)
 	{
 		boolean gen = true;
 		answer = -1;
 		int counter = 0;
+		//Tries to generate a move, if it attepts to fill an illegal spot, it will check another
 		while(gen)
 		{
 			if(aMoves.contains(answer+""))
@@ -49,11 +58,13 @@ public class AIplayer
 		 	answer = makeDumbMove(aMoves, board, answer);
 			}
 			counter++;
-		//  if(playerType == "MINIMAX")
-		//  	answer = makeMiniMaxMove(aMoves, board);
 		}
 		return answer;
 	}
+	/*Generates a random move
+	@args bMoves list of legal moves
+	@returns int column of move to make
+	*/
 	public int makeRandomMove(String bMoves)
 	{
 		//all the random player should care about is picking a column to drop in.
@@ -73,14 +84,21 @@ public class AIplayer
 
 		return m;
 	}
+	/*Generates the random number
+	@returns a random number between 1 and 7
+	*/
 	public int genRandomMove()
 	{
 		return chooser.nextInt(7)+1;
 	}
+	/*Makes a dumb move, essentially random until it notices a winning position for itself and
+		purposely does not take it
+	@args cMoves- legal moves, board- the game board, lastTry- the last move the player tried to make
+	@returns the column to place the piece in
+	*/
 	public int makeDumbMove(String cMoves, int[][] board, int lastTry)
 	{
-		// Make a random move, if its a winning move rerandom
-		
+		// Make a random move, if its a winning move regenerate random move
 		int counter = 0;
 		int m = 0;
 		boolean win = true;
@@ -101,6 +119,11 @@ public class AIplayer
 		}
 		return m;
 	}
+	/*Makes a defensive move, tries to block the user whenever it notices multiple pieces
+		in a row
+	@args cMoves- legal moves, board- the game board, lastTry- the last move the player tried to make
+	@returns the column to place the piece in
+	*/
 	public int makeDefensiveMove(String cMoves, int[][] board, int lastTry)
 	{
 		// Array of heuristic values
@@ -129,6 +152,10 @@ public class AIplayer
 
 		return bestMove + 1;
 	}
+	/*Makes an aggressive move, will choose the position that maximizes it's chance of winning
+	@args cMoves- legal moves, board- the game board, lastTry- the last move the player tried to make
+	@returns the column to place the piece in
+	*/
 	public int makeAggressiveMove(String dMoves, int[][] board, int lastTry)
 	{
 		// Array of heuristic values
@@ -157,10 +184,11 @@ public class AIplayer
 
 		return bestMove + 1;
 	}
-	// public int makeMiniMaxMove(String eMoves, int[][] board)
-	// {
-	// 	
-	// }
+	/*Generates a heuristic value for each possible move by counting how many tokens
+		belonging to one player are in each row, column, or diagonal
+	@args board, token
+	@returns utility value of a move
+	*/
 	public int heuristic(int[][] board, int token)
 	{
 		int h = 0;
@@ -231,7 +259,10 @@ public class AIplayer
 
 		return h;
 	}
-
+	/*Gives a utility value to each move
+	@args count of how many tokens are in a row, column, or diagonal
+	@returns the utility value
+	*/
 	private int utility(int count) {
 		if(count == 2)
 		{
@@ -250,7 +281,10 @@ public class AIplayer
 			return 0;
 		}
 	}
-
+	/*Makes the move using whatever color is passed
+	@args board, column, token
+	@returns updated board
+	*/
 	private int[][] makeMove(int[][] board, int column, int token)
 	{
 		int[][] result = new int[6][7];
@@ -274,30 +308,25 @@ public class AIplayer
 			}
 		}
 
-		//in case you get here, but you shouldnt
+		//in case you get here, but you shouldn't
 		return result;
 	}
-
-	// private int minValue()
- //    {
-
- //    }
- //    private int maxValue()
- //    {
-
- //    }
+	/*Accessor for player color
+	@returns player color
+	*/
 	public int getPlayerColor()
 	{
 		return Color;
 	}
-	
+	/*Accessor for player type
+	@returns player type
+	*/
 	public String getPlayerType()
 	{
 		return playerType;
 	}
-	/*
-	The Connect 4 game will push the score in a setter to AI player which will then change playerType based on that.
-
+	/*The Connect 4 game will push the score in a setter to AI player which will then change playerType based on that.
+	@args score achieved by human player
 	*/
 	public void setPlayerType(int score)
 	{
@@ -311,7 +340,10 @@ public class AIplayer
 				playerType = "Defensive";
 			return;
 	}
-	//check to see if move is winning move
+	/*Check to see if move is winning move
+	@args board
+	@returns whether the move is a winning move
+	*/
 	public boolean gameStatus(int[][]board)
         {
         	int[][] boardArray = board;
