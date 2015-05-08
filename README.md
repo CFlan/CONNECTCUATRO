@@ -18,3 +18,6 @@ To Run:
 4. Learning is the AIPlayer which adapts after each round
 
 5. Click the buttons on the top to place your token into that column
+
+The Connect4.java file contains the setup for the board and for instantiating players of different types.
+The AIplayer.java file contains all the methods for heuristic evaluation and the different methods for each player type.  Using information sent from Connect4, it will determine what type of player is playing and generate the appropriate move.
